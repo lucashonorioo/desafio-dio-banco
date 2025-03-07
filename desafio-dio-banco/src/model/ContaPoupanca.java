@@ -18,7 +18,7 @@ public class ContaPoupanca extends Conta{
             this.saldo -= valor;
             if (!transferencia) {
                 System.out.println("Saque de R$" + valor + " realizado com sucesso.");
-                System.out.println("Saldo atual: R$" + this.saldo);
+                imprimirExtrato();
             }
         } else {
             System.out.println("Saldo insuficiente.");
@@ -30,7 +30,7 @@ public class ContaPoupanca extends Conta{
         this.saldo += valor;
         if (!transferencia) {
             System.out.println("Depósito de R$" + valor + " realizado com sucesso.");
-            System.out.println("Saldo atual: R$" + this.saldo);
+            imprimirExtrato();
         }
     }
 
@@ -49,6 +49,6 @@ public class ContaPoupanca extends Conta{
         saque(valor, true); //
         contaDestinatario.deposito(valor, true);
         System.out.println("Transferência de R$ " + String.format("%.2f", valor) + " realizada!");
-        System.out.println("Seu saldo: " + String.format("%.2f", saldo));
+        imprimirExtrato();
     }
 }

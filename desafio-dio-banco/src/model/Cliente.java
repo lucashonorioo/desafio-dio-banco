@@ -9,18 +9,19 @@ import java.util.List;
 public class Cliente {
 
     private String nome;
+
     private List<Conta> contas;
 
     public Cliente(){
 
     }
 
-    public String getNome() {
-        return nome;
-    }
-
     public Cliente(String nome) {
         this.nome = nome;
+    }
+
+    public String getNome() {
+        return nome;
     }
 
     public void adiconarConta(Conta conta){

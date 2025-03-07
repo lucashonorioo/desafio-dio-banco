@@ -34,10 +34,19 @@ public abstract class Conta {
     public Cliente getCliente() {
         return cliente;
     }
-
+    // Criei os metodos de forma abstratas para se caso no futuro a implementação de conta corrente ou poupança
+    // serem diferente fica mais facil para a alteração individual!
     public abstract void saque(double valor, boolean transferencia);
     public abstract void deposito(double valor, boolean transferencia);
     public abstract void transferencia(Conta contaDestinatario, double valor);
+
+    public void imprimirExtrato(){
+        System.out.println("==== Extrato Bancario ====");
+        System.out.println(" Agencia: " + banco.getNumeroAgencia());
+        System.out.println(" Numero da Conta: " + this.numeroConta);
+        System.out.println(" Saldo: "+ String.format("%.2f", this.saldo));
+        System.out.println("===========================");
+    }
 
     @Override
     public boolean equals(Object o) {

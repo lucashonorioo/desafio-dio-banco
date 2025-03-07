@@ -33,6 +33,9 @@ public class Banco {
         contas.add(conta);
    }
 
+    public int getNumeroAgencia() {
+        return numeroAgencia;
+    }
 
     @Override
     public boolean equals(Object o) {
