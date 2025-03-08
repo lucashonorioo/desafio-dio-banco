@@ -1,20 +1,18 @@
 package model;
 
 import abstracts.Conta;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+@Data
+@NoArgsConstructor
 public class Cliente {
 
     private String nome;
 
     private List<Conta> contas;
-
-    public Cliente(){
-
-    }
 
     public Cliente(String nome) {
         this.nome = nome;

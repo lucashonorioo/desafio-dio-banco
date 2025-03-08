@@ -1,9 +1,8 @@
 package application;
 
 import abstracts.Conta;
-import exceptions.ExcecoesInput;
-import model.Banco;
 import model.Cliente;
+import model.Banco;
 import model.ContaCorrente;
 import model.ContaPoupanca;
 
@@ -42,11 +41,11 @@ public class Main {
                 }
             }
 
-            List<Conta> contas = (banco == 1234) ? contasBanco1 : contasBanco2;
+            Banco bancoAtivo = (banco == 1234) ? banco1 : banco2;
             System.out.println("Bem-vindo ao Banco " + ((banco == 1234) ? "1" : "2"));
 
             Conta conta = null;
-            while (contas.size() < 2) {
+            while (bancoAtivo.encontrarConta(1) == null || bancoAtivo.encontrarConta(2) == null) {
                 System.out.print("Sua Conta é Corrente ou Conta Poupança? (C/P): ");
                 char tipoConta = sc.next().charAt(0);
 
@@ -57,21 +56,21 @@ public class Main {
                 double saldo = lerDouble("Insira seu saldo: ", sc);
 
                 if (tipoConta == 'C') {
-                    conta = new ContaCorrente(saldo, numeroConta, new Cliente(nomeCliente), new Banco("Banco " + ((banco == 1234) ? "1" : "2"), banco));
+                    conta = new ContaCorrente(saldo, numeroConta, new Cliente(nomeCliente), bancoAtivo);
                 } else if (tipoConta == 'P') {
-                    conta = new ContaPoupanca(saldo, numeroConta, new Cliente(nomeCliente), new Banco("Banco " + ((banco == 1234) ? "1" : "2"), banco));
+                    conta = new ContaPoupanca(saldo, numeroConta, new Cliente(nomeCliente), bancoAtivo);
                 } else {
                     System.out.println("Erro: Tipo de conta inválida!");
                     continue;
                 }
 
-                contas.add(conta);
-                if (contas.size() == 1) {
+                bancoAtivo.adicionarConta(conta);
+                if (bancoAtivo.encontrarConta(1) == null) {
                     primeiroCliente = conta.getCliente();
                     contaAtiva = conta;
                 }
                 System.out.println("Conta criada");
-                if (contas.size() < 2) {
+                if (bancoAtivo.encontrarConta(1) == null || bancoAtivo.encontrarConta(2) == null) {
                     System.out.println("Crie mais uma conta para continuar");
                 }
             }
@@ -92,31 +91,36 @@ public class Main {
 
                     switch (opcao) {
                         case 1:
-                            double deposito = lerDouble("Digite o valor do depósito: ", sc);
-                            contas.get(0).deposito(deposito, false);
+                            int numeroContaDeposito = lerInteiro("Digite o número da conta: ", sc);
+                            Conta contaDeposito = bancoAtivo.encontrarConta(numeroContaDeposito);
+                            if (contaDeposito != null) {
+                                double deposito = lerDouble("Digite o valor do depósito: ", sc);
+                                contaDeposito.deposito(deposito, false);
+                            } else {
+                                System.out.println("Conta não encontrada.");
+                            }
                             break;
                         case 2:
-                            double saque = lerDouble("Digite o valor do saque: ", sc);
-                            contas.get(0).saque(saque, false);
+                            int numeroContaSaque = lerInteiro("Digite o número da conta: ", sc);
+                            Conta contaSaque = bancoAtivo.encontrarConta(numeroContaSaque);
+                            if (contaSaque != null) {
+                                double saque = lerDouble("Digite o valor do saque: ", sc);
+                                contaSaque.saque(saque, false);
+                            } else {
+                                System.out.println("Conta não encontrada.");
+                            }
                             break;
                         case 3:
+                            int numeroContaOrigem = lerInteiro("Digite o número da sua conta: ",sc);
+                            Conta contaOrigem = bancoAtivo.encontrarConta(numeroContaOrigem);
                             int contaDestino = lerInteiro("Digite o número da conta que deseja transferir: ", sc);
-                            if (contaDestino == contas.get(0).getNumeroConta()) {
-                                System.out.println("Erro: Não é possível transferir para a mesma conta!");
-                                break;
-                            }
-                            double valor = lerDouble("Digite o valor: ", sc);
-                            Conta destino = null;
-                            for (Conta c : contas) {
-                                if (c.getNumeroConta() == contaDestino) {
-                                    destino = c;
-                                    break;
-                                }
-                            }
-                            if (destino != null) {
-                                contas.get(0).transferencia(destino, valor);
+                            Conta destino = bancoAtivo.encontrarConta(contaDestino);
+
+                            if (contaOrigem != null && destino != null) {
+                                double valor = lerDouble("Digite o valor: ", sc);
+                                contaOrigem.transferencia(destino, valor);
                             } else {
-                                System.out.println("Conta de destino não encontrada.");
+                                System.out.println("Conta de origem ou destino não encontrada.");
                             }
                             break;
                         case 4:
@@ -142,23 +146,17 @@ public class Main {
                     switch (opcao) {
                         case 1:
                             System.out.println("Clientes cadastrados: ");
-                            for (Conta c : contas) {
+                            for (Conta c : bancoAtivo.getContas()) {
                                 System.out.println(" - " + c.getCliente().getNome() + ", Número da conta: " + c.getNumeroConta());
                             }
                             break;
                         case 2:
                             System.out.println("Contas existentes:");
-                            for (Conta c : contas) {
+                            for (Conta c : bancoAtivo.getContas()) {
                                 System.out.println("- Número da conta: " + c.getNumeroConta() + ", Cliente: " + c.getCliente().getNome());
                             }
                             int numeroConta = lerInteiro("Digite o número da conta que deseja acessar: ", sc);
-                            Conta contaEscolhida = null;
-                            for (Conta c : contas) {
-                                if (c.getNumeroConta() == numeroConta) {
-                                    contaEscolhida = c;
-                                    break;
-                                }
-                            }
+                            Conta contaEscolhida = bancoAtivo.encontrarConta(numeroConta);
                             if (contaEscolhida != null) {
                                 primeiroCliente = contaEscolhida.getCliente();
                                 contaAtiva = contaEscolhida;

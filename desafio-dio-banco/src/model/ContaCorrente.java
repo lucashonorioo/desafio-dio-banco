@@ -1,12 +1,10 @@
 package model;
 
 import abstracts.Conta;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 public class ContaCorrente extends Conta {
-
-    public ContaCorrente(){
-
-    }
 
     public ContaCorrente(double saldo, int numeroConta, Cliente cliente, Banco banco) {
         super(saldo, numeroConta, cliente, banco);
@@ -14,15 +12,15 @@ public class ContaCorrente extends Conta {
 
 
     @Override
-    public void saque( double valor, boolean transferencia) {
+    public boolean saque(double valor, boolean transferencia) {
+        System.out.println("Tentando sacar R$" + valor + " da conta corrente " + this.numeroConta);
         if (this.saldo >= valor) {
             this.saldo -= valor;
-            if (!transferencia) {
-                System.out.println("Saque de R$" + valor + " realizado com sucesso.");
-                imprimirExtrato();
-            }
+            System.out.println("Novo saldo após saque: R$" + this.saldo);
+            return true;
         } else {
             System.out.println("Saldo insuficiente.");
+            return false;
         }
     }
 
@@ -37,19 +35,27 @@ public class ContaCorrente extends Conta {
 
     @Override
     public void transferencia(Conta contaDestinatario, double valor) {
-        if (contaDestinatario == null){
+        if (contaDestinatario == null) {
             System.out.println("Erro, essa conta não existe");
-        }
-        if (this.equals(contaDestinatario)){
-            System.out.println("Erro: A conta rementte e a conta destinataria são iguais");
             return;
         }
-        if(this.saldo < valor){
-            System.out.println("Erro: Saldo insuficiente");
+        if (this.equals(contaDestinatario)) {
+            System.out.println("Erro: A conta remetente e a conta destinataria são iguais");
+            return;
         }
-        saque(valor, true);
-        contaDestinatario.deposito(valor, true);
-        System.out.println("Transferência de R$ " + String.format("%.2f", valor) + " realizada!");
-        imprimirExtrato();
+        if (this.saldo < valor) {
+            System.out.println("Erro: Saldo insuficiente");
+            return;
+        }
+        if (this.saque(valor, true)) {
+
+            contaDestinatario.deposito(valor, true);
+            System.out.println("Transferência de R$" + String.format("%.2f", valor) + " realizada com sucesso!");
+
+            System.out.println("Extrato da conta remetente após a transferência:");
+            this.imprimirExtrato();
+        } else {
+            System.out.println("Erro na transferência: saldo insuficiente.");
+        }
     }
 }
