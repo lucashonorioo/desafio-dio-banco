@@ -22,8 +22,4 @@ public class Cliente {
         return nome;
     }
 
-    public void adiconarConta(Conta conta){
-        contas.add(conta);
-    }
-
 }

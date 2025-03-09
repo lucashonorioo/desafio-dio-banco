@@ -113,7 +113,7 @@ public class Main {
                         case 3:
                             int numeroContaOrigem = lerInteiro("Digite o número da sua conta: ",sc);
                             Conta contaOrigem = bancoAtivo.encontrarConta(numeroContaOrigem);
-                            int contaDestino = lerInteiro("Digite o número da conta que deseja transferir: ", sc);
+                            int contaDestino = lerInteiro("Digite o número da conta destino: ", sc);
                             Conta destino = bancoAtivo.encontrarConta(contaDestino);
 
                             if (contaOrigem != null && destino != null) {

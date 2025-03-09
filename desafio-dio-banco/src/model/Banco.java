@@ -29,10 +29,9 @@ public class Banco {
         return numeroAgencia;
     }
 
-    public void adiconarCliente(Cliente cliente){
-        clientes.add(cliente);
-   }
-
+    public List<Conta> getContas() {
+        return contas;
+    }
    public void adicionarConta(Conta conta){
         contas.add(conta);
    }
@@ -44,20 +43,6 @@ public class Banco {
             }
         }
         return null;
-    }
-
-    public boolean sacar(int numeroConta, double valor) {
-        Conta conta = encontrarConta(numeroConta);
-        if (conta != null) {
-            return conta.saque(valor, false);
-        } else {
-            System.out.println("Conta não encontrada.");
-            return false;
-        }
-    }
-
-    public List<Conta> getContas() {
-        return contas;
     }
 
 }
